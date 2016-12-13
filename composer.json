@@ -1,0 +1,20 @@
+{
+    "name": "kullenen/xhprof-embed",
+    "description": "embedded xhprof profiler wrapper with simple gui",
+    "version": "1.0",
+    "require": {
+        "csa/xhprof-persister": "*",
+        "csa/xhprof-grapher": "*",
+        "twig/twig": "^1.30"
+    },
+    "authors": [
+        {
+            "name": "Alexandr Kullenen",
+            "email": "alexandr@kullen.en"
+        }
+    ],
+    "autoload": {
+	"psr-4": { "XhprofEmbed\\" : "src/" },
+	"files": ["src/autoload.php"]
+    }
+}

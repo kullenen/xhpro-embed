@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+{% import 'macros.html' as macs %}
+
+{% block title %}
+  Run: {{ renderer.params.token }}
+{% endblock %}
+
+{% block menu %}
+  <td>
+    <a href="{{
+	     attribute(
+	     renderer,
+	     'link',
+	     [{
+	     'token': renderer.params.token,
+	     'order': 'wt',
+	     'reverse': 1,
+	     'limit': 100
+	     }]
+	     )
+	     }}">functions</a>
+  </td>
+  <td>
+    <a href="{{
+	     attribute(
+	     renderer,
+	     'link',
+	     [{'token': renderer.params.token, 'context': 1}]
+	     )
+	     }}">context</a>
+  </td>
+  <td>
+    <a href="{{
+	       attribute(
+	       renderer,
+	       'link',
+	       [{'token': renderer.params.token, 'graph': 1}]
+	       )
+	       }}">graph</a>
+  </td>
+{% endblock %}

@@ -1,0 +1,47 @@
+body {
+    font-size: 80%;
+}
+
+table.metrics {
+    width: 100%;
+}
+
+table tr:nth-child(even) {
+    background-color: #eee;
+}
+
+table.metrics, table.metrics td {
+    border: solid 1px #bdc7d8;
+    border-collapse: collapse;
+    padding: 1px;
+    text-align: right;
+}
+
+table.metrics th {
+    background-color: #eee;
+    border-left: solid 1px #bdc7d8;
+    border-right: solid 1px #bdc7d8;
+    font-weight: normal;
+}
+
+table.metrics th {
+    text-align: center;
+}
+
+table.metrics tr.section td {
+    background-color: #fff;
+    border: solid 1px #bdc7d8;
+    border-style: solid none dashed none;
+}
+
+table.metrics td:first-child {
+    text-align: left;
+}
+
+table td.left {
+    text-align: left;
+}
+
+td.sorted {
+  color: green;
+}

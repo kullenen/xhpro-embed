@@ -1,0 +1,57 @@
+{% extends 'intoken.html' %}
+
+{% import 'macros.html' as macs %}
+
+{% block describe %}
+  <h4>Function report</h4>
+{% endblock %}
+
+{% block table %}
+  {% set order = renderer.params.order|replace({'ex.': ''}) %}
+
+  <table class="metrics">
+    {{ macs.printTableHeader(renderer, colsOrder, colNames, data.function, {'fn':renderer.params.fn}, true) }}
+
+    {% for item in data.function %}
+      {{ macs.tableSection('Current') }}
+
+      <tr>
+	{%- for key in colsOrder if key in (item|keys) and not ('ex.' in key) -%}
+	  {{ macs.printMetric(renderer, item, key, order == key|replace({'ex.':'', 'pr.':''})) }}
+	{%- endfor -%}
+      </tr>
+    {% endfor %}
+
+    {% for item in data.function %}
+      <tr>
+	<td>Exclusive Metrics</td><td colspan="2"/>
+
+	{%- for key in colsOrder if key in (item|keys) and ('ex.' in key) -%}
+	  {{ macs.printMetric(renderer, item, key, order == key|replace({'ex.':'', 'pr.':''})) }}
+	{%- endfor -%}
+      </tr>
+    {%- endfor -%}
+
+    {% if data.parents|length > 0 %}
+      {{ macs.tableSection('Parent', 'time and memory percentage is calculated relative to current function') }}
+      {% for item in data.parents %}
+	<tr>
+	  {%- for key in colsOrder if key in (item|keys) -%}
+	    {{ macs.printMetric(renderer, item, key, order == key|replace({'ex.':'', 'pr.':''})) }}
+	  {%- endfor -%}
+	</tr>
+      {%- endfor -%}
+    {% endif %}
+
+    {% if data.childs|length > 0 %}
+      {{ macs.tableSection('Children', 'time and memory percentage is calculated relative to current function') }}
+      {% for item in data.childs %}
+	<tr>
+	  {%- for key in colsOrder if key in (item|keys) -%}
+	    {{ macs.printMetric(renderer, item, key, order == key|replace({'ex.':'', 'pr.':''})) }}
+	  {%- endfor -%}
+	</tr>
+      {%- endfor -%}
+    {% endif %}
+  </table>
+{% endblock %}

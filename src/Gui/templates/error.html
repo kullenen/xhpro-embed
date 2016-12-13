@@ -1,0 +1,10 @@
+{% extends "main.html" %}
+
+{% block title "Error" %}
+
+{% block content %}
+  <b>{{ exception.message }}</b><br/>
+  {% for i in exception.traceAsString|split("\n") %}
+    {{ i }}</br>
+  {% endfor %}
+{% endblock %}

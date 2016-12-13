@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+
+{% block title "Existing runs" %}
+
+{% block describe %}
+{% endblock %}
+
+{% block table %}
+  <table>
+    {% for token in data %}
+      {% if loop.first %}
+	<tr>
+	  {% for key, name in { 'token': 'Run', 'time': 'Time', 'host': 'Host' } %}
+	    {% set reverse = renderer.params.order == key ? not renderer.params.reverse :  0 %}
+	    <th><a href="{{ attribute(renderer, 'link', [{'order':key, 'reverse': reverse}]) }}">{{ name }}</a></th>
+	  {% endfor %}
+	</tr>
+      {% endif %}
+
+      <tr>
+	<td>
+	  <a href="{{ attribute(renderer, 'link', [{ 'token':token.token, 'order':'wt', 'reverse': 1, 'limit':100 }]) }}">{{ token.token }}</a>
+	</td>	  
+	<td>
+	  {{ token.time }}
+	</td>
+	<td>
+	  {{ token.host }}
+	</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

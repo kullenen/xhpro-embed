@@ -1,0 +1,60 @@
+{% extends 'intoken.html' %}
+{% import 'macros.html' as macs %}
+
+{% block describe %}
+  <h4>Overall report ({{ renderer.params.limit ? "top #{renderer.params.limit}" : 'all' }} functions)</h4>
+  <table>
+    <tr>
+      <th colspan="3">Summary</th>
+    </tr>
+    <tr>
+      {% for col in data.totals|keys %}
+	<tr>
+	  <td><nobr>{{ macs.printColName(colNames, col, 1) }}</nobr>:</td>
+	  <td>{{ macs.printTableValue(data.totals, col) }}</td>
+	  <td>
+	    {% if col in ['wt', 'cpu'] %}microsec{% endif %}
+	    {% if col in ['mu', 'pmu'] %}bytes{% endif %}
+	  </td>
+	</tr>
+      {% endfor %}
+    </tr>
+  </table>
+{% endblock %}
+
+{% block table %}
+  <div>
+    {% if renderer.params.limit %}
+      <a href="{{
+	       attribute(
+	       renderer,
+	       'link',
+	       [{'token': renderer.params.token, 'order': renderer.params.order, 'reverse': renderer.params.reverse}]
+	       )
+	       }}">show full list
+      </a>
+    {% else %}
+      <a href="{{
+	       attribute(
+	       renderer,
+	       'link',
+	       [{'token': renderer.params.token, 'order': renderer.params.order, 'reverse': renderer.params.reverse, 'limit': 100}]
+	       )
+	       }}">show top 100 list
+      </a>
+    {% endif %}
+  </div>
+  
+  <table class="metrics">
+    {{ macs.printTableHeader(renderer, colsOrder, colNames, data.all, [], false) }}
+    <tbody>
+      {% for item in data.all %}
+	<tr>
+	  {%- for key in colsOrder if key in (item|keys) -%}
+	    {{ macs.printMetric(renderer, item, key, renderer.params.order in [ key, "pr.#{key}"]) }}
+ 	  {%- endfor -%}
+	</tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

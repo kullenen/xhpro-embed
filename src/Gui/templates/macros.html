@@ -1,0 +1,85 @@
+{%- macro printColName(names, key, nobreak) -%}
+  {% spaceless %}
+  {% set n = names[key] ?? key %}
+  {% if nobreak %}
+    {{ n }}
+  {% else %}
+    {%- for l in n|split(' ') -%}
+      {{ l }}
+      {%- if not loop.last and loop.length > 1 -%}
+	<br/>
+      {%- endif -%}
+    {%- endfor -%}
+  {% endif %}
+{% endspaceless %}
+{%- endmacro -%}
+
+{% macro printTableHeader(renderer, colsOrder, colNames, rows, linkParams, inclOnly) %}
+  {% import _self as macs %}
+
+  {% for item in rows %}
+    {% if loop.first %}
+      <tr>
+	{% for key in colsOrder if key in (item|keys) and (not inclOnly or not ('ex.' in key)) %}
+	  <th {% if key != 'fn' %} colspan="2" {% endif %}>
+	    {%- if not ('pr.' in key) -%}
+	      {% set reverse = renderer.params.order == key ? not renderer.params.reverse : (key == 'fn' ? 0 : 1) %}
+	      <a href="{{
+		       attribute(
+		       renderer,
+		       'link',
+		       [{'token': renderer.params.token, 'order':key, 'reverse': reverse}|merge(linkParams)]
+		       )
+		       }}">
+		     {%- endif -%}
+		     {{ macs.printColName(colNames, key) }}
+		     {%- if not ('pr.' in key) -%}</a>{%- endif -%}
+	  </th>
+	{% endfor %}
+      </tr>
+      <tr>
+	{% for key in colsOrder if key in (item|keys) and (not inclOnly or not ('ex.' in key)) %}
+	  {% if key == 'fn' %}
+	    <th/>
+	  {% else %}
+	    <th>{{ key == 'ct' ? 'cnt' : ('mu' in key|replace({'pr.':'', 'ex.':''}) ? 'bytes' : 'msec') }}</th><th>%</th>
+	  {% endif %}
+	{% endfor %}
+      </tr>
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
+
+{% macro printTableValue(row, column) %}
+    {% if 'pr.' in column or 'fn' == column %}{{ row[column] }}{%- else -%}{{ row[column]|number_format }}{%- endif -%}
+    {%- if 'pr.' in column -%}%{%- endif -%}
+{% endmacro %}
+
+{% macro printMetric(renderer, row, column, sorted) %}
+  {% import _self as macs %}
+
+  {% set srtClass = sorted ? 'sorted' : '' %}
+
+  {%- if column == 'fn' -%}
+    <td>
+      {% set link = attribute(
+      renderer,
+      'link',
+      [{'fn':row[column], 'token': renderer.params.token, 'order': renderer.params.order, 'reverse': renderer.params.reverse }]
+      ) %}
+      <a href="{{ link }}">{{ macs.printTableValue(row, column) }}</a>
+    </td>
+  {%- else -%}
+    <td class="{{ srtClass }}">
+      {{ macs.printTableValue(row, column) }}
+    </td>
+    <td class="{{ srtClass }}">
+      {{ macs.printTableValue(row, "pr.#{column}") }}
+    </td>
+  {%- endif -%}
+{% endmacro %}
+
+{% macro tableSection(text, desc) %}
+  <tr class="section"><td colspan="30"><center><b>{{ text }}</b></br><i>{{ desc }}</i></center></td></tr>
+  <tr class="section"><td  colspan="30"/></tr>
+{% endmacro %}

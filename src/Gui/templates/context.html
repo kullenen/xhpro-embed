@@ -1,0 +1,19 @@
+{% extends "intoken.html" %}
+
+{% block describe %}
+  <h4>Run Context</h4>
+{% endblock %}
+
+{% block table %}
+  <table class="metrics">
+    {% for name, bag in data %}
+      {{ macs.tableSection(name) }}
+      {% for n, v in bag %}
+	<tr>
+	  <td>{{ n }}</td>
+	  <td class="left">{{ v }}</td>
+	</tr>
+      {% endfor %}
+    {% endfor %}
+  </table>
+{% endblock %}

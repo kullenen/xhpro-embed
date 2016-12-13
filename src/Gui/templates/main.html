@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>xhprof embedded</title>
+    <link href="{{ attribute(renderer, 'link', [{ 'css' : 1 }]) }}" rel="stylesheet" type="text/css"/>
+    <body>
+      <table width="100%" class="header">
+	<tbody>
+	  <tr>
+	    <td>
+	      <b>xhprof embedded</b>
+	    </td>
+	    <td>
+	      <a href="/">root</a>
+	    </td>
+	    <td>
+	      <a href="{{ attribute(renderer, 'link', [{'order': 'time', 'reverse': 1 }]) }}">all runs</a>
+	    </td>
+	    {% block menu %}
+	    {% endblock %}
+	  </tr>
+	</tbody>
+      </table>
+      <hr/>
+
+      {% set colsOrder = ['fn', 'ct', 'wt', 'ex.wt', 'cpu', 'ex.cpu', 'mu', 'ex.mu', 'pmu', 'ex.pmu'] %}
+
+      {% set colNames = { 'fn': 'Function', 'ct': 'Calls', 'pr.ct': 'Calls %' } %}
+      {% for col, name in {'wt':'wall time', 'cpu':'cpu time', 'mu':'memory usage', 'pmu':'peak memory usage'} %}
+	{% set n = col in ['mu', 'pmu'] ? "#{name}" : "#{name}" %}
+	{% set colNames = colNames|merge({(col):n|capitalize, ("ex.#{col}"):"Exclusive #{n}"}) %}
+	{% set colNames = colNames|merge({("pr.#{col}"):name|capitalize, ("pr.ex.#{col}"):"Exclusive #{name} %"}) %}
+      {% endfor %}
+
+      <h4>{% block title %}{% endblock %}</h4>
+      {% block content %}
+	<div>
+	  {% block describe %}
+	  {% endblock %}
+	</div>
+	<div>
+	  {% block table %}
+	  {% endblock %}
+	</div>
+      {% endblock %}
+    </body>
+</html>
