@@ -20,7 +20,7 @@ class TokensProvider extends BaseProvider {
 			$time = $context->getBag('xhprof-embed')->get('time');
 		}
 
-		return ['time' => $time ? date('Y-m-d h:i:s', $time) : null, 'host' => $host];
+		return ['time' => $time ? date('Y-m-d H:i:s', $time) : null, 'host' => $host];
 	}
 
     public function getData($params) {
